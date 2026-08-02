@@ -35,7 +35,7 @@ loops — noted for the implementation phase.
 
 ## Week 8 — Reproduction & solution planning
 
-**Reproduction commit link:** [paste the pushed commit URL here after `git push`]
+**Reproduction commit link:** https://github.com/Jordy-03/pathreview/commit/80b57b79ba7129906028d3fbfd1d50d93aae7dbb
 
 **Reproduction summary:**
 Traced the gap through the codebase: `core/services/review_service.py:365`
@@ -47,9 +47,7 @@ regenerate-on-fail path. So a dismissive or discouraging (but not "harmful")
 feedback section is delivered untouched — confirming the missing step is real
 and I know exactly where it lives.
 
-**PLAN.md link:** [paste PLAN.md URL, e.g. .../tree/feat/69-feedback-tone-check/PLAN.md]
-
-**Walkthrough video (recommended):** [optional Loom link, ≤2 min — not graded]
+**PLAN.md link:** https://github.com/Jordy-03/pathreview/blob/feat/69-feedback-tone-check/PLAN.md
 
 **Blockers or open questions:**
 Need to confirm whether the tone classifier should reuse the existing
