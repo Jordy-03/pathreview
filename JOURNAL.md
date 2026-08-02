@@ -22,7 +22,7 @@ understanding how those two modules connect.
 
 **Branch name:** feat/69-feedback-tone-check
 
-**Setup confirmation:** [ ] App runs locally at localhost:5173
+**Setup confirmation:** [x] App runs locally at localhost:5173
 
 **"Is this right for me?" checklist / scope reasoning:**
 Tier 2, estimated 5–8 hours. Scope is bounded to two named files plus a new
