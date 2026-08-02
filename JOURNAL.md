@@ -32,3 +32,26 @@ window. Main risk: the regenerate loop needs a retry cap to avoid infinite
 loops — noted for the implementation phase.
 
 **Cohort ledger:** [ ] Issue added to cohort ledger
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** [paste the pushed commit URL here after `git push`]
+
+**Reproduction summary:**
+Traced the gap through the codebase: `core/services/review_service.py:365`
+lists "Validate feedback tone and constructiveness" as a placeholder comment in
+`_run_safety_checks` that is never implemented, `safety/content_filter.py` only
+regex-matches a short list of harmful phrases (no constructive-vs-negative
+classification), and `rag/generator/review_generator.py` has no
+regenerate-on-fail path. So a dismissive or discouraging (but not "harmful")
+feedback section is delivered untouched — confirming the missing step is real
+and I know exactly where it lives.
+
+**PLAN.md link:** [paste PLAN.md URL, e.g. .../tree/feat/69-feedback-tone-check/PLAN.md]
+
+**Walkthrough video (recommended):** [optional Loom link, ≤2 min — not graded]
+
+**Blockers or open questions:**
+Need to confirm whether the tone classifier should reuse the existing
+`openai.OpenAI` client/config from `ReviewGenerator` or get its own in the
+safety layer. Otherwise plan is clear going into Week 9.
