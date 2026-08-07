@@ -83,7 +83,7 @@ No other blockers.
 
 ### Check-in 2 (end of week)
 
-**PR link:** <!-- PASTE the PR URL here after opening it: https://github.com/ascherj/pathreview/pull/NNN -->
+**PR link:** https://github.com/ascherj/pathreview/pull/1006
 
 **Branch:** `feat/69-feedback-tone-check`
 
