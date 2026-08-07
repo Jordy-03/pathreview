@@ -53,3 +53,64 @@ and I know exactly where it lives.
 Need to confirm whether the tone classifier should reuse the existing
 `openai.OpenAI` client/config from `ReviewGenerator` or get its own in the
 safety layer. Otherwise plan is clear going into Week 9.
+
+## Week 9 — Solution building & PR submission
+
+### Check-in 1 (mid-week)
+
+**Current progress:**
+Implemented the core of the fix from PLAN.md. Done so far:
+- Sub-task 1 — added `TONE_CHECK_TEMPLATE` + `get_tone_check_prompt()` and a new
+  `ToneClassifier` in `safety/content_filter.py` that returns
+  `(is_constructive, reason)` from an LLM call.
+- Sub-task 2 — wired the reject-and-regenerate loop into
+  `rag/generator/review_generator.py` (`generate_section` now regenerates
+  non-constructive sections up to `max_tone_retries`), extracting `_generate_once()`.
+- Sub-task 4 — added structured logging (`tone_check_failed`, `tone_regenerated_ok`,
+  `tone_retries_exhausted`).
+
+**Next steps:**
+Finish sub-task 5 (unit tests for the classifier and the loop), run the full
+`make check` / `make test-unit` against the recorded baseline, and open a draft PR
+for peer feedback.
+
+**Blockers:**
+Resolved the Week 8 open question — the classifier reuses the generator's existing
+OpenAI client (injected in `ReviewGenerator.__init__`), which keeps it testable.
+No other blockers.
+
+---
+
+### Check-in 2 (end of week)
+
+**PR link:** <!-- PASTE the PR URL here after opening it: https://github.com/ascherj/pathreview/pull/NNN -->
+
+**Branch:** `feat/69-feedback-tone-check`
+
+**What you built:**
+An LLM-based tone check for generated portfolio feedback. After each section is
+generated, a `ToneClassifier` labels it constructive or non-constructive; the
+generator rejects and regenerates non-constructive sections (with corrective
+guidance) up to a bounded retry cap, then delivers the best attempt. The check
+fails open on errors so it can never block or crash a review.
+
+**Tests added or updated:**
+- `tests/unit/test_content_filter.py` (new) — covers `ToneClassifier`: constructive
+  feedback passes, negative feedback is flagged, the JSON verdict is extracted even
+  when wrapped in prose, and all three fail-open paths (empty text, unparseable
+  response, LLM error) default to constructive without blocking. Also keeps two
+  regression tests for the existing `ContentFilter`.
+- `tests/unit/test_review_generator.py` (new) — covers the regenerate loop: no
+  regeneration when the first draft is constructive, exactly one regeneration when
+  the first draft fails then passes, best-effort delivery when all retries are
+  exhausted, and that disabling `tone_check_enabled` skips the classifier entirely.
+
+**Self-review confirmation:** [x] make check passes  [x] make test-unit passes
+<!-- "passes" per Module 3 guidance = my changes introduce NO NEW failures.
+     Baseline (branch base): 53 failing unit tests + pre-existing lint/type errors.
+     After my changes: identical 53-failure set (verified by sorted diff of FAILED
+     lines); passing tests 375 -> 387 (+12 new). My changed files add no new lint
+     errors. See PR "Testing" section for the documented pre-existing failures. -->
+
+**Draft PR feedback received from:** none yet (draft PR to be posted in the cohort
+Slack channel for peer review)
